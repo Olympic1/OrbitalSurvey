@@ -698,8 +698,8 @@ namespace OrbitalSurvey.Debug
 
             granter.NameKey = "Falki";
             granter.LogoKey = "Assets/Images/Icons/icon.png"; //"flag_MFG_1Proton.png";
-            granter.LocalizationNameKey = "OrbitalSurvey/Granter/Name";
-            granter.LocalizationDescriptionKey = "OrbitalSurvey/Granter/Description";
+            granter.LocalizationNameKey = LocalizationStrings.MISSIONS_GRANTER_NAME;
+            granter.LocalizationDescriptionKey = LocalizationStrings.MISSIONS_GRANTER_DESCRIPTION;
             granters.Add(granter);
         }
 

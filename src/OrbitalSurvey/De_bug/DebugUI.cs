@@ -106,7 +106,7 @@ namespace OrbitalSurvey.Debug
         public Texture2D Asset;
         private bool _showActiveMissions = false;
         private bool _showMissionDetails = true;
-        private string _missionId = "orbital_survey_Mun_MunGiantRock";
+        private string _missionId = "OrbitalSurvey_Mun_MunGiantRock";
         private string _newMissionId = "orbital_survey_03";
         private int _missionIndex;
         private string _stageToActivate = "0";

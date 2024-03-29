@@ -2,30 +2,20 @@
 using KSP.Game;
 using KSP.Messages;
 using OrbitalSurvey.Debug;
+using OrbitalSurvey.Missions.Managers;
 using OrbitalSurvey.UI;
 using OrbitalSurvey.Utilities;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 namespace OrbitalSurvey.Managers;
 
-public class MessageListener
+public class MessageListener : ManagerBase<MessageListener>
 {
-    private static readonly ManualLogSource _LOGGER = Logger.CreateLogSource("OrbitalSurvey.MessageListener");
-    private static MessageListener _instance;
+    private MessageListener() { }
+    
     public MessageCenter MessageCenter => GameManager.Instance.Game.Messages;
 
-    private MessageListener()
-    { }
-
-    public static MessageListener Instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = new MessageListener();
-            return _instance;
-        }
-    }
+    public override void Initialize() { }
 
     public void SubscribeToMessages() => _ = Subscribe();
 
@@ -34,17 +24,17 @@ public class MessageListener
         await Task.Delay(100);
 
         MessageCenter.PersistentSubscribe<GameLoadFinishedMessage>(OnGameLoadFinishedMessage);
-        _LOGGER.LogInfo("Subscribed to GameLoadFinishedMessage.");
+        Logger.LogInfo("Subscribed to GameLoadFinishedMessage.");
         MessageCenter.PersistentSubscribe<GameStateChangedMessage>(OnGameStateChangedMessage);
-        _LOGGER.LogInfo("Subscribed to GameStateChangedMessage.");
+        Logger.LogInfo("Subscribed to GameStateChangedMessage.");
         MessageCenter.PersistentSubscribe<MapCelestialBodyAddedMessage>(OnMapCelestialBodyAddedMessage);
-        _LOGGER.LogInfo("Subscribed to MapCelestialBodyAddedMessage.");
+        Logger.LogInfo("Subscribed to MapCelestialBodyAddedMessage.");
         MessageCenter.PersistentSubscribe<OnMissionTriumphDismissed>(DebugManager.Instance.OnMissionTriumphDismissed);
     }
 
     private void OnGameLoadFinishedMessage(MessageCenterMessage message)
     {
-        _LOGGER.LogDebug("GameLoadFinishedMessage triggered.");
+        Logger.LogDebug("GameLoadFinishedMessage triggered.");
 
         if (!Core.Instance.MapsInitialized)
         { 
@@ -55,7 +45,7 @@ public class MessageListener
         // if another session's data is loaded, need to reinitialize data
         if (Core.Instance.SessionGuidString != Utility.SessionGuidString)
         {
-            _LOGGER.LogInfo("New SessionGuidString detected. Resetting data.");
+            Logger.LogInfo("New SessionGuidString detected. Resetting data.");
             Core.Instance.InitializeCelestialData();
         }
 
@@ -66,6 +56,10 @@ public class MessageListener
         
         DebugUI.Instance.InitializeControls();
         DebugUI.Instance.IsDebugWindowOpen = Settings.WILL_DEBUG_WINDOW_OPEN_ON_GAME_LOAD;
+        
+        // initialize missions
+        MissionManager.Instance.Initialize();
+        // TODO load mission data ??? or we'll load them SaveManager?
     }
     
     private void OnGameStateChangedMessage(MessageCenterMessage obj)

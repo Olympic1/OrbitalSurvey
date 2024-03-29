@@ -76,4 +76,7 @@ public static class LocalizationStrings
     public static readonly LocalizedString WAYPOINT_BUTTON_ADD = "OrbitalSurvey/UI/Waypoint/Button/Add";
     public static readonly LocalizedString WAYPOINT_BUTTON_UPDATE = "OrbitalSurvey/UI/Waypoint/Button/Update";
     public static readonly LocalizedString WAYPOINT_BUTTON_REMOVE = "OrbitalSurvey/UI/Waypoint/Button/Remove";
+
+    public static readonly string MISSIONS_GRANTER_NAME = "OrbitalSurvey/Missions/Granter/Name";
+    public static readonly string MISSIONS_GRANTER_DESCRIPTION = "OrbitalSurvey/Missions/Granter/Description";
 }

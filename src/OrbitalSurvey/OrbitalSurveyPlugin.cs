@@ -14,6 +14,7 @@ using OrbitalSurvey.Utilities;
 using UitkForKsp2.API;
 using Patches = OrbitalSurvey.Utilities.Patches;
 using KSP.Game;
+using OrbitalSurvey.Missions.Managers;
 
 namespace OrbitalSurvey;
 
@@ -93,6 +94,8 @@ public class OrbitalSurveyPlugin : BaseSpaceWarpPlugin
         
         Harmony.CreateAndPatchAll(typeof(Patches));
         Harmony.CreateAndPatchAll(typeof(DebugPatches));
+        
+        MissionManager.Instance.Initialize();
     }
 
     /// <summary>
