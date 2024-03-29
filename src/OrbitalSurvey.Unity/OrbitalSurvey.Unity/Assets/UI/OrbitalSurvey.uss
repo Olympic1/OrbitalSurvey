@@ -36,6 +36,8 @@
     --waypoint-green: rgb(0, 255, 0);
     --waypoint-blue: rgb(0, 50, 255);
     --waypoint-gray: rgb(128, 128, 128);
+    --mission-area-green: rgba(0, 255, 0, 0.4);
+    --mission-border-black: rgba(0, 0, 0, 0.1);
 }
 
 .root {
@@ -401,28 +403,42 @@
     position: absolute;
     align-items: center;
     font-size: 10px;
-    -unity-font-definition: var(--font-medium);
+    -unity-font-definition: var(--font-bold);
     width: 100px;
     height: 100px;
     justify-content: center;
     margin-left: -50px;
     margin-top: -50px;
+    -unity-text-align: upper-center;
+}
+
+.map-marker__name-container {
+    flex-grow: 1;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    justify-content: flex-end;
+    height: 0;
 }
 
 .map-marker__name {
-    -unity-text-align: lower-center;
     text-overflow: ellipsis;
-    height: 30%;
     white-space: normal;
     text-shadow: -10px 10px 0 rgb(0, 0, 0);
-    -unity-font-definition: var(--font-bold);
     color: rgb(255, 255, 255);
+    -unity-text-align: lower-center;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
     padding-bottom: 0;
 }
 
-.map-marker__vessel-marker-container {
-    width: 25%;
-    height: 25%;
+.map-marker__marker-container {
+    width: 20px;
+    height: 20px;
+    flex-grow: 0;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
 }
@@ -488,23 +504,59 @@
     margin-bottom: 2px;
 }
 
-.map-marker__latitude {
-    -unity-text-align: upper-center;
+.map-marker__mission-marker-container {
+    flex-shrink: 0;
+    flex-grow: 0;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
     padding-bottom: 0;
-    height: 15%;
+}
+
+.map-marker__mission-area-marker {
+    background-image: url('project://database/Assets/Images/Other/white_circle_no_border.png?fileID=2800000&guid=bc3b5dc297c87714dae4c22e3f067e01&type=3#white_circle_no_border');
+    -unity-background-image-tint-color: var(--mission-area-green);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-left-color: var(--mission-border-black);
+    border-right-color: var(--mission-border-black);
+    border-top-color: var(--mission-border-black);
+    border-bottom-color: var(--mission-border-black);
+    border-top-left-radius: 100%;
+    border-bottom-left-radius: 100%;
+    border-top-right-radius: 100%;
+    border-bottom-right-radius: 100%;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.map-marker__geo-coordinates-container {
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 0;
+}
+
+.map-marker__latitude {
+    padding-bottom: 0;
+    height: 15px;
     text-shadow: -10px 10px 0 rgb(0, 0, 0);
-    -unity-font-definition: var(--font-bold);
     color: rgb(255, 255, 255);
     padding-top: 0;
 }
 
 .map-marker__longitude {
-    -unity-text-align: upper-center;
     padding-top: 0;
-    height: 15%;
+    height: 15px;
     text-shadow: -10px 10px 0 rgb(0, 0, 0);
     color: rgb(255, 255, 255);
-    -unity-font-definition: var(--font-bold);
 }
 
 .side-toggle {

@@ -8,9 +8,12 @@ namespace OrbitalSurvey.UI.Controls
     public class MapMarkerControl: VisualElement
     {
         public const string UssClassName = "map-marker";
+        
+        public const string UssClassName_NameContainer = UssClassName + "__name-container";
         public const string UssClassName_Name = UssClassName + "__name";
         
-        public const string UssClassName_VesselMarkerContainer = UssClassName + "__vessel-marker-container";
+        public const string UssClassName_MarkerContainer = UssClassName + "__marker-container";
+        public const string UssClassName_MissionMarkerContainer = UssClassName + "__mission-marker-container";
         
         public const string UssClassName_VesselMarker = UssClassName + "__vessel-marker";
         public const string UssClassName_MarkerGoodTint = UssClassName_VesselMarker + "--good";
@@ -27,12 +30,18 @@ namespace OrbitalSurvey.UI.Controls
         
         public const string UssClassName_MouseOverMarker = UssClassName + "__mouse-over-marker";
         
+        public const string UssClassName_MissionAreaMarker = UssClassName + "__mission-area-marker";
+        
+        public const string UssClassName_GeoCoordinatesContainer = UssClassName + "__geo-coordinates-container";
+        
         public static string UssClassName_Latitude = UssClassName + "__latitude";
         public static string UssClassName_Longitude = UssClassName + "__longitude";
         
+        private VisualElement _nameContainer;
         private Label _nameLabel;
         private VisualElement _markerElementContainer;
         private VisualElement _markerElement;
+        private VisualElement _geoCoordinatesContainer;
         private Label _latitudeLabel;
         private Label _longitudeLabel;
 
@@ -84,12 +93,20 @@ namespace OrbitalSurvey.UI.Controls
                     break;
                 case MarkerType.MouseOver: SetAsMouseOver();
                     break;
+                case MarkerType.MissionArea: SetAsMissionArea();
+                    break;
             }
         }
         
         public MapMarkerControl()
         {
             AddToClassList(UssClassName);
+            
+            _nameContainer = new VisualElement()
+            {
+                name = "map-marker_name-container"
+            };
+            _nameContainer.AddToClassList(UssClassName_NameContainer);
 
             _nameLabel = new Label()
             {
@@ -97,13 +114,14 @@ namespace OrbitalSurvey.UI.Controls
             };
             _nameLabel.AddToClassList(UssClassName_Name);
             _nameLabel.pickingMode = PickingMode.Ignore;
-            hierarchy.Add(_nameLabel);
+            _nameContainer.Add(_nameLabel);
+            hierarchy.Add(_nameContainer);
 
             _markerElementContainer = new VisualElement()
             {
                 name = "map-marker_marker-container"
             };
-            _markerElementContainer.AddToClassList(UssClassName_VesselMarkerContainer);
+            _markerElementContainer.AddToClassList(UssClassName_MarkerContainer);
             
             _markerElement = new VisualElement()
             {
@@ -113,13 +131,19 @@ namespace OrbitalSurvey.UI.Controls
             _markerElementContainer.Add(_markerElement);
             hierarchy.Add(_markerElementContainer);
             
+            _geoCoordinatesContainer = new VisualElement()
+            {
+                name = "map-marker_geo-coordinates-container"
+            };
+            _geoCoordinatesContainer.AddToClassList(UssClassName_GeoCoordinatesContainer);
+            
             _latitudeLabel = new Label()
             {
                 name = "map-marker__latitude"
             };
             _latitudeLabel.AddToClassList(UssClassName_Latitude);
             _latitudeLabel.pickingMode = PickingMode.Ignore;
-            hierarchy.Add(_latitudeLabel);
+            _geoCoordinatesContainer.Add(_latitudeLabel);
             
             _longitudeLabel = new Label()
             {
@@ -127,7 +151,9 @@ namespace OrbitalSurvey.UI.Controls
             };
             _longitudeLabel.AddToClassList(UssClassName_Longitude);
             _longitudeLabel.pickingMode = PickingMode.Ignore;
-            hierarchy.Add(_longitudeLabel);
+            _geoCoordinatesContainer.Add(_longitudeLabel);
+            
+            hierarchy.Add(_geoCoordinatesContainer);
 
             // Show/hide name and geo coordinates on hovering
             _markerElementContainer.RegisterCallback<PointerEnterEvent>(_ =>
@@ -167,6 +193,11 @@ namespace OrbitalSurvey.UI.Controls
             _markerElement.AddToClassList(UssClassName_VesselMarker);
             _markerElement.RemoveFromClassList(UssClassName_WaypointMarker);
             _markerElement.RemoveFromClassList(UssClassName_MouseOverMarker);
+            _markerElement.RemoveFromClassList(UssClassName_MissionAreaMarker);
+            
+            _markerElementContainer.AddToClassList(UssClassName_MarkerContainer);
+            _markerElementContainer.RemoveFromClassList(UssClassName_MissionMarkerContainer);
+            
             _markerElement.pickingMode = PickingMode.Position;
         }
 
@@ -175,6 +206,11 @@ namespace OrbitalSurvey.UI.Controls
             _markerElement.RemoveFromClassList(UssClassName_VesselMarker);
             _markerElement.AddToClassList(UssClassName_WaypointMarker);
             _markerElement.RemoveFromClassList(UssClassName_MouseOverMarker);
+            _markerElement.RemoveFromClassList(UssClassName_MissionAreaMarker);
+            
+            _markerElementContainer.AddToClassList(UssClassName_MarkerContainer);
+            _markerElementContainer.RemoveFromClassList(UssClassName_MissionMarkerContainer);
+            
             _markerElement.pickingMode = PickingMode.Position;
         }
 
@@ -183,6 +219,24 @@ namespace OrbitalSurvey.UI.Controls
             _markerElement.RemoveFromClassList(UssClassName_VesselMarker);
             _markerElement.RemoveFromClassList(UssClassName_WaypointMarker);
             _markerElement.AddToClassList(UssClassName_MouseOverMarker);
+            _markerElement.RemoveFromClassList(UssClassName_MissionAreaMarker);
+            
+            _markerElementContainer.AddToClassList(UssClassName_MarkerContainer);
+            _markerElementContainer.RemoveFromClassList(UssClassName_MissionMarkerContainer);
+            
+            _markerElementContainer.pickingMode = PickingMode.Ignore;
+        }
+        
+        public void SetAsMissionArea()
+        {
+            _markerElement.RemoveFromClassList(UssClassName_VesselMarker);
+            _markerElement.RemoveFromClassList(UssClassName_WaypointMarker);
+            _markerElement.RemoveFromClassList(UssClassName_MouseOverMarker);
+            _markerElement.AddToClassList(UssClassName_MissionAreaMarker);
+            
+            _markerElementContainer.RemoveFromClassList(UssClassName_MarkerContainer);
+            _markerElementContainer.AddToClassList(UssClassName_MissionMarkerContainer);
+            
             _markerElementContainer.pickingMode = PickingMode.Ignore;
         }
 
@@ -295,6 +349,8 @@ namespace OrbitalSurvey.UI.Controls
                 { name = "Latitude", defaultValue = 15.977301 };
             UxmlBoolAttributeDescription _isWaypoint = new()
                 { name = "IsWaypoint", defaultValue = false };
+            UxmlBoolAttributeDescription _isMissionArea = new()
+                { name = "IsMissionArea", defaultValue = false };
             UxmlBoolAttributeDescription _isYellow = new()
                 { name = "IsYellow", defaultValue = false };
             UxmlBoolAttributeDescription _isRed = new()
@@ -315,14 +371,18 @@ namespace OrbitalSurvey.UI.Controls
                     control.NameValue = _name.GetValueFromBag(bag, cc);
                     control.LatitudeValue = _latitude.GetValueFromBag(bag, cc);
                     control.LongitudeValue = _longitude.GetValueFromBag(bag, cc);
-
-                    if (_isWaypoint.GetValueFromBag(bag, cc))
+                    
+                    if (_isMissionArea.GetValueFromBag(bag, cc))
+                    {
+                        control.SetAsMissionArea();
+                    }
+                    else if (_isWaypoint.GetValueFromBag(bag, cc))
                     {
                         control.SetAsWaypoint();
                     }
                     else
                     {
-                        control.SetAsVessel();
+                        control.SetAsVessel();    
                     }
                     
                     if (_isYellow.GetValueFromBag(bag, cc)) control.SetAsYellow();
@@ -338,7 +398,8 @@ namespace OrbitalSurvey.UI.Controls
         {
             Vessel = 0,
             Waypoint = 1,
-            MouseOver = 2
+            MouseOver = 2,
+            MissionArea = 3
         }
     }
 }
