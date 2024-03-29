@@ -26,11 +26,14 @@ OrbitalSurvey/Missions/FindDiscoverable/MainObjective/Objective,Text,,Find the u
 OrbitalSurvey/Missions/FindDiscoverable/MainObjective/WindowTitle,Text,,We are near!
 OrbitalSurvey/Missions/FindDiscoverable/MainObjective/Message,Text,,"Director, we're getting strong readings! The unusual terrain we're looking for must be somewhere near! Look around a bit, it must be here."
 
-OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective1/Objective,Text,,(optional) Explore area A
+OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective1/Name,Text,,Area A
+OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective1/Objective,Text,,(optional) Land in Area A
 OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective1/WindowTitle,Text,,Area A results
-OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective2/Objective,Text,,(optional) Explore area B
+OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective2/Name,Text,,Area B
+OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective2/Objective,Text,,(optional) Land in Area B
 OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective2/WindowTitle,Text,,Area B results
-OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective3/Objective,Text,,(optional) Explore area C
+OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective3/Name,Text,,Area C
+OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective3/Objective,Text,,(optional) Land in Area C
 OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective3/WindowTitle,Text,,Area C results
 OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective/Message,Text,,"Director, we haven't found any unusual terrain here. We'll have to look at another location."
 

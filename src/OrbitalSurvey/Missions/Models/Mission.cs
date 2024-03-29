@@ -1,8 +1,7 @@
-﻿using KSP.Game;
-using KSP.Game.Missions.Definitions;
+﻿using KSP.Game.Missions.Definitions;
 using KSP.Game.Missions.State;
-using OrbitalSurvey.Missions.Managers;
 using OrbitalSurvey.Missions.Utility;
+using OrbitalSurvey.Models;
 using Random = UnityEngine.Random;
 
 namespace OrbitalSurvey.Missions.Models;
@@ -96,12 +95,12 @@ public class Mission
             if (i == mainObjectiveAreaNumber)
             {
                 // create optional objective that contains the main objective
-                objective.CreateForMainObjective(MainObjective, i * 2);
+                objective.CreateForMainObjective(MainObjective, LocalizationStrings.MISSION_AREA_NAMES[i+1],i * 2);
             }
             else
             {
                 // create optional objective
-                objective.CreateRegularOptionalObjective(geoCoordinatesToAvoid, i * 2);
+                objective.CreateRegularOptionalObjective(geoCoordinatesToAvoid, LocalizationStrings.MISSION_AREA_NAMES[i+1], i * 2);
             }
             
             geoCoordinatesToAvoid.Add((objective.Latitude, objective.Longitude));

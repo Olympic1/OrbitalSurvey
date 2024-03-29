@@ -21,7 +21,9 @@
                         <ui:VisualElement name="marker-canvas" picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); position: absolute; width: 100%; height: 100%;" />
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="Overlay: ON" display-tooltip-when-elided="true" name="notification" picking-mode="Ignore" class="notification" />
-                    <ui:VisualElement name="mission-canvas" picking-mode="Ignore" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; width: 100%; height: 100%; display: flex;" />
+                    <ui:VisualElement name="mission-canvas__overflow-hidder" picking-mode="Ignore" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); overflow: hidden; position: absolute; width: 100%; height: 100%;">
+                        <ui:VisualElement name="mission-canvas" picking-mode="Ignore" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; width: 100%; height: 100%; display: flex;" />
+                    </ui:VisualElement>
                     <ui:VisualElement name="zoom-controls" picking-mode="Ignore" class="zoom-controls">
                         <ui:Label tabindex="-1" text="1.0" display-tooltip-when-elided="true" name="zoom-factor" picking-mode="Ignore" class="zoom-controls__factor" />
                         <ui:Button display-tooltip-when-elided="true" name="track-vessel" class="zoom-controls__button zoom-controls__button--toggled" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;">

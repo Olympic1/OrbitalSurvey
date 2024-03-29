@@ -28,6 +28,10 @@ public static class Settings
     public static readonly List<int> AVAILABLE_RESOLUTIONS = new() { 1024 };
     public static int ActiveResolution = 1024;
     public static int HighResolution = 2048;
+
+    public static readonly float MIN_ANGULAR_DISTANCE_FOR_MISSION_AREAS = 50f;
+    public static readonly float MIN_MAX_LATITUDE_FOR_MISSION_AREAS = 70f;
+    public static readonly float MIN_MAX_LONGITUDE_FOR_MISSION_AREAS = 160f;
     
     public static void Initialize()
     {

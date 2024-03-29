@@ -5,6 +5,7 @@ using KSP.Audio;
 using KSP.Game;
 using KSP.Game.Science;
 using OrbitalSurvey.Managers;
+using OrbitalSurvey.Missions.UI;
 using OrbitalSurvey.Models;
 using OrbitalSurvey.UI.Controls;
 using OrbitalSurvey.Utilities;
@@ -40,6 +41,7 @@ public class MainGuiController : MonoBehaviour
     private ZoomAndPanController _zoomAndPanController;
     private MouseOverController _mouseOverController;
     private WaypointController _waypointController;
+    private MissionAreaController _missionController;
     private const string _BODY_INITIAL_VALUE = "<body>";
     private const string _MAPTYPE_INITIAL_VALUE = "<map>";
     private Coroutine _hideNotification;
@@ -77,6 +79,9 @@ public class MainGuiController : MonoBehaviour
 
         // create waypoint controller (waypoint create/remove)
         _waypointController = gameObject.AddComponent<WaypointController>();
+        
+        // create mission area controller (optional mission areas to explore)
+        _missionController = gameObject.AddComponent<MissionAreaController>();
         
         // create mouse-over controller (show geo coordinates and region on mouse-over)
         _mouseOverController = gameObject.AddComponent<MouseOverController>();
@@ -205,6 +210,7 @@ public class MainGuiController : MonoBehaviour
         _vesselController.ToggleVesselNames();
         _waypointController.ToggleWaypointNames();
         _mouseOverController.ToggleRegionNames();
+        _missionController.ToggleAreaNames();
         
         // send notification
         var notificationText = SceneController.Instance.IsMarkerNamesVisible ?
@@ -330,10 +336,11 @@ public class MainGuiController : MonoBehaviour
         _selectedMap.OnNewCurrentInstanceCreated += _newCurrentMapInstanceHandler;
         UpdatePercentageComplete(_selectedMap.PercentDiscovered);
 
+        SceneController.Instance.SelectedBody = body;
+        
         _vesselController.RebuildVesselMarkers(body);
         _waypointController.RebuildWaypointMarkers(body);
-
-        SceneController.Instance.SelectedBody = body;
+        _missionController.RebuildMarkers(body);
     }
 
     private void UpdatePercentageComplete(float percent)

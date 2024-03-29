@@ -2,6 +2,7 @@
 using KSP.Game.Science;
 using OrbitalSurvey.Managers;
 using OrbitalSurvey.UI;
+using OrbitalSurvey.UI.Controls;
 using UnityEngine;
 
 namespace OrbitalSurvey.Utilities;
@@ -90,5 +91,13 @@ public static class UiUtility
 
         // return the localized name for that regionId
         return ScienceRegionsHelper.GetRegionDisplayName(regionId);
+    }
+    
+    public static void PositionMarkerOnTheMap(MapMarkerControl control, Vector2 mapPositionPercentage, float canvasWidth, float canvasHeight)
+    {
+        var scaledCoordinates = UiUtility.GetAdjustedCanvasCoordinatesFromMapPositionPercentage(
+            mapPositionPercentage, canvasWidth, canvasHeight);
+        control.style.left = scaledCoordinates.x;
+        control.style.top = scaledCoordinates.y;
     }
 }

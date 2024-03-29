@@ -79,4 +79,11 @@ public static class LocalizationStrings
 
     public static readonly string MISSIONS_GRANTER_NAME = "OrbitalSurvey/Missions/Granter/Name";
     public static readonly string MISSIONS_GRANTER_DESCRIPTION = "OrbitalSurvey/Missions/Granter/Description";
+
+    public static readonly Dictionary<int, LocalizedString> MISSION_AREA_NAMES = new()
+    {
+        { 1, "OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective1/Name" },
+        { 2, "OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective2/Name" },
+        { 3, "OrbitalSurvey/Missions/FindDiscoverable/OptionalObjective3/Name" },
+    };
 }
