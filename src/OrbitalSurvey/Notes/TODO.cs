@@ -103,7 +103,7 @@
  - Fix: experiment interrupted (not enough resources) log spam during high - reported by Argon
  
  Changelog:
- n/a
+ - Added Russian localization - by sallfris
  
  
  */
