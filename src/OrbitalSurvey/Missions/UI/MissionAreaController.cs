@@ -19,9 +19,12 @@ public class MissionAreaController : MonoBehaviour
     private VisualElement _root;
     private VisualElement _mapContainer;
     private VisualElement _missionCanvas;
-    
+
+    private float _canvasInitialWidth;
+    private float _canvasInitialHeight;
     private float _canvasWidth;
     private float _canvasHeight;
+    private float _canvasScale => _canvasWidth / _canvasInitialWidth;
     private bool _canvasInitialized;
     
     private Action<float, float> _windowResizedHandler;
@@ -51,8 +54,8 @@ public class MissionAreaController : MonoBehaviour
         // wait for 1 frame for the canvas to get its size
         yield return null;
         
-        _canvasWidth = _missionCanvas.layout.width;
-        _canvasHeight = _missionCanvas.layout.height;
+        _canvasWidth = _canvasInitialWidth = _missionCanvas.layout.width;
+        _canvasHeight = _canvasInitialHeight = _missionCanvas.layout.height;
         _canvasInitialized = true;
     }
     
@@ -71,7 +74,8 @@ public class MissionAreaController : MonoBehaviour
 
         foreach (var objective in mission.Objectives)
         {
-            UiUtility.PositionMarkerOnTheMap(objective.AreaMarker, objective.MapPositionPercentage, _canvasWidth, _canvasHeight);
+            UiUtility.PositionMarkerOnTheMap(objective.AreaMarker, objective.MapPositionPercentage,
+                _canvasWidth, _canvasHeight, true, _canvasScale);
             _missionCanvas.Add(objective.AreaMarker);
         }
     }
@@ -140,7 +144,8 @@ public class MissionAreaController : MonoBehaviour
 
         foreach (var objective in mission.Objectives)
         {
-            UiUtility.PositionMarkerOnTheMap(objective.AreaMarker, objective.MapPositionPercentage, _canvasWidth, _canvasHeight);
+            UiUtility.PositionMarkerOnTheMap(objective.AreaMarker, objective.MapPositionPercentage,
+                _canvasWidth, _canvasHeight, true, _canvasScale);
         }
     }
 

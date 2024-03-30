@@ -93,11 +93,18 @@ public static class UiUtility
         return ScienceRegionsHelper.GetRegionDisplayName(regionId);
     }
     
-    public static void PositionMarkerOnTheMap(MapMarkerControl control, Vector2 mapPositionPercentage, float canvasWidth, float canvasHeight)
+    public static void PositionMarkerOnTheMap(MapMarkerControl control, Vector2 mapPositionPercentage, float canvasWidth, float canvasHeight, bool willMarkerBeScaled = false, float canvasScale = 1)
     {
         var scaledCoordinates = UiUtility.GetAdjustedCanvasCoordinatesFromMapPositionPercentage(
             mapPositionPercentage, canvasWidth, canvasHeight);
         control.style.left = scaledCoordinates.x;
         control.style.top = scaledCoordinates.y;
+
+        if (willMarkerBeScaled)
+        {
+            control.transform.scale = new Vector3(
+                x: ZoomAndPanController.Instance.ZoomFactor * canvasScale,
+                y: ZoomAndPanController.Instance.ZoomFactor * canvasScale);
+        }
     }
 }
