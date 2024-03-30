@@ -107,6 +107,7 @@ namespace OrbitalSurvey.UI.Controls
                 name = "map-marker_name-container"
             };
             _nameContainer.AddToClassList(UssClassName_NameContainer);
+            _nameContainer.pickingMode = PickingMode.Ignore;
 
             _nameLabel = new Label()
             {
@@ -136,6 +137,7 @@ namespace OrbitalSurvey.UI.Controls
                 name = "map-marker_geo-coordinates-container"
             };
             _geoCoordinatesContainer.AddToClassList(UssClassName_GeoCoordinatesContainer);
+            _geoCoordinatesContainer.pickingMode = PickingMode.Ignore;
             
             _latitudeLabel = new Label()
             {
