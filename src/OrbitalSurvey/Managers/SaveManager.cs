@@ -1,5 +1,7 @@
 ﻿using BepInEx.Logging;
 using KSP.Game;
+using OrbitalSurvey.Missions.Managers;
+using OrbitalSurvey.Missions.Models;
 using OrbitalSurvey.Models;
 using OrbitalSurvey.UI;
 using OrbitalSurvey.UI.Controls;
@@ -36,6 +38,7 @@ public class SaveManager
         dataToSave.SessionGuidString = Utility.SessionGuidString;
         dataToSave.Bodies.Clear();
 
+        // save map data
         foreach (var celestialData in Core.Instance.CelestialDataDictionary)
         {
             if (!celestialData.Value.ContainsData)
@@ -70,10 +73,29 @@ public class SaveManager
             _LOGGER.LogDebug($"{celestialData.Key} prepared for saving.");
         }
         
+        // save waypoints
         dataToSave.Waypoints.Clear();
         foreach (var waypointModel in SceneController.Instance.Waypoints)
         {
             dataToSave.Waypoints.Add(waypointModel.Waypoint.Serialize());
+        }
+        
+        // save missions
+        dataToSave.Missions.Clear();
+        foreach (var mission in MissionManager.Instance.ActiveMissions.Values)
+        { 
+            var objectives = new List<SaveDataAdapter.MissionOptionalObjectiveAdapter>();
+            foreach (var objective in mission.Objectives)
+            {
+                objectives.Add(new SaveDataAdapter.MissionOptionalObjectiveAdapter
+                {
+                    ContainsMainObjective = objective.ContainsMainObjective,
+                    Latitude = objective.Latitude,
+                    Longitude = objective.Longitude,
+                    StageIndex = objective.StageIndex
+                });
+            }
+            dataToSave.Missions.Add(mission.Id, objectives);
         }
     }
 
@@ -85,15 +107,36 @@ public class SaveManager
         HasBufferedLoadData = true;
         
         // skip loading if Maps haven't been initialized yet. Initialization will call LoadData();
-        if (!Core.Instance.MapsInitialized)
-            return;
+        //if (!Core.Instance.MapsInitialized)
+        //    return;
         
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        //#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         LoadData();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        //#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 
-    public async Task LoadData()
+    private async void LoadData()
+    {
+        // await for Core initialization and MissionManager initialization
+        while (!Core.Instance.MapsInitialized || !MissionManager.Instance.ReadyForMissionLoading)
+        {
+            await Task.Delay(500);
+        }
+        
+        LoadMapsData();
+        await LoadWaypointData();
+        LoadMissionData();
+        
+        SceneController.Instance.WindowPosition = bufferedLoadData.WindowPosition;
+        Core.Instance.SessionGuidString = bufferedLoadData.SessionGuidString;
+
+        bufferedLoadData = null;
+        HasBufferedLoadData = false;
+        
+        VesselManager.Instance.SetLastRefreshTimeToNow();
+    }
+
+    private void LoadMapsData()
     {
         // mapping data
         foreach (var celestialData in Core.Instance.CelestialDataDictionary)
@@ -140,9 +183,10 @@ public class SaveManager
             }
         }
         _LOGGER.LogInfo("Mapping data loaded.");
+    }
 
-        
-        // waypoints
+    private async Task LoadWaypointData()
+    {
         SceneController.Instance.Waypoints.Clear();
         SceneController.Instance.WaypointInitialized = false;
         if (bufferedLoadData.Waypoints.Count > 0)
@@ -165,16 +209,8 @@ public class SaveManager
             }
             _LOGGER.LogInfo("Waypoint data loaded.");
         }
-        
-        SceneController.Instance.WindowPosition = bufferedLoadData.WindowPosition;
-        Core.Instance.SessionGuidString = bufferedLoadData.SessionGuidString;
-
-        bufferedLoadData = null;
-        HasBufferedLoadData = false;
-        
-        VesselManager.Instance.SetLastRefreshTimeToNow();
     }
-
+    
     private async Task WaitUntilAllWaypointBodiesAreLoaded()
     {
         //select all bodies containing waypoints
@@ -198,5 +234,50 @@ public class SaveManager
                 }
             }
         }
+    }
+    
+    private void LoadMissionData()
+    {
+        foreach (var mission in MissionManager.Instance.ActiveMissions.Values)
+        {
+            if (!bufferedLoadData.Missions.TryGetValue(mission.Id, out var loadedObjectives))
+            {
+                _LOGGER.LogWarning(
+                    $"Mission with ID '{mission.Id}' is marked as 'Active' but its data is not found in the loaded save game data." +
+                    $"\nThat is weird, it should never happen! Mission will be now initialized like it's new.");
+             
+                // just initialize the mission - new optional objective data will be created
+                mission.Initialize();
+                
+                continue;
+            }
+
+            if (loadedObjectives.Count != 3)
+            {
+                _LOGGER.LogError($"Mismatched count of loaded optional objectives for mission '{mission.Id}'." +
+                                 $"\nCount is: '{loadedObjectives.Count}', but it should be 3." +
+                                 $"Mission will be now initialized like it's new.");
+                
+                // just initialize the mission - new optional objective data will be created
+                mission.Initialize();
+                
+                continue;
+            }
+
+            mission.Objectives.Clear();
+            for (int i = 0; i < loadedObjectives.Count; i++)
+            {
+                var objective = new OptionalObjective();
+                objective.CreateFromLoadedData(loadedObjectives[i], i);
+                mission.Objectives.Add(objective);
+            }
+            mission.IsInitialized = true;
+            
+            _LOGGER.LogInfo($"Loaded data for mission '{mission.Id}'");
+        }
+
+        MissionManager.Instance.ReadyForMissionLoading = false;
+        
+        _LOGGER.LogInfo("Mission data loaded.");
     }
 }

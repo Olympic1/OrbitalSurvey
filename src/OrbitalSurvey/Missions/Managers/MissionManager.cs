@@ -12,6 +12,8 @@ public class MissionManager : ManagerBase<MissionManager>
 {
     public Dictionary<string, List<Mission>> Missions = new();
     public Dictionary<string, Mission> ActiveMissions = new();
+
+    public bool ReadyForMissionLoading;
     
     public override void Initialize()
     {
@@ -23,12 +25,12 @@ public class MissionManager : ManagerBase<MissionManager>
         InitializeMissions();
         InitializeActiveMissions();
         InitializeMissionGranter();
+
+        ReadyForMissionLoading = true;
     }
 
     private void InitializeMissions()
     {
-        
-        
         foreach (var missionData in GameManager.Instance.Game?.KSP2MissionManager?._missionDefinitions)
         {
             if (missionData.ID.StartsWith(MissionUtility.MISSION_ID_PREFIX))

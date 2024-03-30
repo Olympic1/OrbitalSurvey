@@ -24,14 +24,14 @@ public static class Settings
     public static ConfigEntry<int> TimeBetweenRetroactiveScansLow;
     public static ConfigEntry<Difficulty> Difficulty; // Not used
     
-    public const bool WILL_DEBUG_WINDOW_OPEN_ON_GAME_LOAD = true;
+    public const bool WILL_DEBUG_WINDOW_OPEN_ON_GAME_LOAD = false;
     public static readonly List<int> AVAILABLE_RESOLUTIONS = new() { 1024 };
     public static int ActiveResolution = 1024;
     public static int HighResolution = 2048;
 
-    public static readonly float MIN_ANGULAR_DISTANCE_FOR_MISSION_AREAS = 50f;
-    public static readonly float MIN_MAX_LATITUDE_FOR_MISSION_AREAS = 70f;
-    public static readonly float MIN_MAX_LONGITUDE_FOR_MISSION_AREAS = 160f;
+    public const float MIN_ANGULAR_DISTANCE_FOR_MISSION_AREAS = 50f;
+    public const float MIN_MAX_LATITUDE_FOR_MISSION_AREAS = 70f;
+    public const float MIN_MAX_LONGITUDE_FOR_MISSION_AREAS = 160f;
     
     public static void Initialize()
     {

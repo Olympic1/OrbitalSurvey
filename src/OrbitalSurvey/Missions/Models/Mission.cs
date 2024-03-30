@@ -8,63 +8,33 @@ namespace OrbitalSurvey.Missions.Models;
 
 public class Mission
 {
-    public Mission(MissionData missionData) => Initialize(missionData);
-    
-    // for some reason KSP2 has separate instances for the definition and for the active mission
-    // even though their definitions are nearly identical
-    public MissionData DefinitionMissionData;
-    public MissionData ActiveMissionData;
+    public Mission(MissionData missionData) => Preinitialize(missionData);
     
     public string Id;
     public string Name;
     public string Body;
     public string DiscoverableRegion;
 
+    public bool IsInitialized;
+    
+    // for some reason KSP2 has separate instances for the definition and for the active mission
+    // even though their definitions are nearly identical
+    public MissionData DefinitionMissionData;
+    public MissionData ActiveMissionData;
+
     public MissionState GetState() => ActiveMissionData?.state ?? MissionState.Inactive;
-    /*
-    {
-        var missionManager = GameManager.Instance.Game?.KSP2MissionManager;
-        if (missionManager == null || missionManager.ActiveMissions?.Count == 0)
-        {
-            return MissionState.Invalid;
-        }
-        
-        // try to find the mission in ActiveMissions and return the state
-        foreach (var activeMission in missionManager.ActiveMissions[0].MissionDatas)
-        {
-            if (activeMission.ID == Id)
-            {
-                return activeMission.state;
-            }
-        }
-
-        // if the mission wasn't found in ActiveMissions then it's inactive
-        return MissionState.Inactive;
-    }
-    */
-
-    /*
-    public OptionalObjective ObjectiveA;
-    public OptionalObjective ObjectiveB;
-    public OptionalObjective ObjectiveC;
-    */
 
     public MainObjective MainObjective;
 
     public List<OptionalObjective> Objectives = new();
 
-    private void Initialize(MissionData missionData)
+    private void Preinitialize(MissionData missionData)
     {
         DefinitionMissionData = missionData;
         Id = missionData.ID;
         Name = missionData.name;
         ParseDataFromId(missionData.ID, out Body, out DiscoverableRegion);
         MainObjective = new MainObjective(Body, DiscoverableRegion);
-
-        BuildOptionalObjectives();
-
-        // TODO build optional objectives
-        // TODO build main objective
     }
     
     private void ParseDataFromId(string id, out string body, out string region)
@@ -81,7 +51,7 @@ public class Mission
         region = data[2];
     }
     
-    private void BuildOptionalObjectives()
+    public void Initialize()
     {
         int mainObjectiveAreaNumber = Random.Range(0, 3);
 
@@ -107,6 +77,8 @@ public class Mission
                 
             Objectives.Add(objective);
         }
+
+        IsInitialized = true;
     }
     
 }

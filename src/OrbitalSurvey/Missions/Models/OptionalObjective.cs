@@ -1,4 +1,5 @@
 ﻿using KSP.Sim;
+using OrbitalSurvey.Models;
 using OrbitalSurvey.UI;
 using OrbitalSurvey.UI.Controls;
 using OrbitalSurvey.Utilities;
@@ -77,6 +78,17 @@ public class OptionalObjective
         Latitude = latitude;
         Longitude = longitude;
         StageIndex = stageIndex;
+        
+        CreateAreaMarker();
+    }
+
+    public void CreateFromLoadedData(SaveDataAdapter.MissionOptionalObjectiveAdapter loadData, int objectiveIndex)
+    {
+        Name = LocalizationStrings.MISSION_AREA_NAMES[objectiveIndex + 1];
+        ContainsMainObjective = loadData.ContainsMainObjective;
+        Latitude = loadData.Latitude;
+        Longitude = loadData.Longitude;
+        StageIndex = loadData.StageIndex;
         
         CreateAreaMarker();
     }

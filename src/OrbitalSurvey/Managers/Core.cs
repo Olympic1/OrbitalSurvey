@@ -91,8 +91,8 @@ public class Core// : MonoBehaviour
         _LOGGER.LogInfo($"Finished CelestialDataDictionary initialization with {CelestialDataDictionary.Count} entries.");
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        if (SaveManager.Instance.HasBufferedLoadData)
-            SaveManager.Instance.LoadData();
+        //if (SaveManager.Instance.HasBufferedLoadData)
+        //    SaveManager.Instance.LoadData();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 
@@ -100,7 +100,7 @@ public class Core// : MonoBehaviour
         ScanningStats scanningStats, string vesselGuid, bool isRetroActiveScanning = false)
     {
         // sometimes, load data can be done before the textures are initialized
-        if (!MapsInitialized || !CelestialDataDictionary.ContainsKey(body))
+        if (!MapsInitialized || !CelestialDataDictionary.ContainsKey(body) || SaveManager.Instance.HasBufferedLoadData)
         {
             return;
         }
