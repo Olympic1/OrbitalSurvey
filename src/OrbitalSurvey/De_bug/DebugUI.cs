@@ -2,6 +2,7 @@
 using KSP.Game;
 using KSP.Game.Missions.Definitions;
 using OrbitalSurvey.Managers;
+using OrbitalSurvey.Missions.Managers;
 using OrbitalSurvey.Models;
 using SpaceWarp.API.Game.Waypoints;
 using SpaceWarp.API.UI;
@@ -106,10 +107,12 @@ namespace OrbitalSurvey.Debug
         public Texture2D Asset;
         private bool _showActiveMissions = false;
         private bool _showMissionDetails = true;
-        private string _missionId = "OrbitalSurvey_Mun_MunGiantRock";
+        private string _missionId = "OrbitalSurvey_Minmus_MinmusBalancingRock"; //"OrbitalSurvey_Mun_MunGiantRock";
         private string _newMissionId = "orbital_survey_03";
         private int _missionIndex;
         private string _stageToActivate = "0";
+        private List<string> _missionIds;
+        private int _activateMissionIndex = 12;
 
         private static DebugUI _instance;
         internal static DebugUI Instance
@@ -992,6 +995,11 @@ namespace OrbitalSurvey.Debug
 
             if (_showMissionSection)
             {
+                if (MissionManager.Instance.Missions?.Values?.Count > 0)
+                {
+                    _missionIds = MissionManager.Instance.Missions.Values.SelectMany(list => list, (list, m) => m.Id).ToList();
+                }
+                
                 GUILayout.Label("--");
                 
                 GUILayout.BeginHorizontal();
@@ -1013,7 +1021,11 @@ namespace OrbitalSurvey.Debug
                 GUILayout.BeginHorizontal();
                 {
                     GUILayout.Label("MissionId:", _labelStyle);
+                    if (GUILayout.Button("<", _narrowButton) && _activateMissionIndex > 0)
+                        _missionId = _missionIds[--_activateMissionIndex];
                     _missionId = GUILayout.TextField(_missionId);
+                    if (GUILayout.Button(">", _narrowButton) && _activateMissionIndex < _missionIds.Count-1)
+                        _missionId = _missionIds[++_activateMissionIndex];
                     if (GUILayout.Button("Activate Mission"))
                     {
                         DebugManager.Instance.ActivateMission(_missionId);

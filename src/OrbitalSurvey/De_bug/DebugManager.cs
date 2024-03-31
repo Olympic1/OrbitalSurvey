@@ -12,6 +12,8 @@ using KSP.Sim;
 using KSP.Sim.Definitions;
 using KSP.Sim.impl;
 using OrbitalSurvey.Managers;
+using OrbitalSurvey.Missions.Managers;
+using OrbitalSurvey.Missions.Utility;
 using OrbitalSurvey.Models;
 using OrbitalSurvey.Utilities;
 using SpaceWarp.API.Assets;
@@ -683,11 +685,37 @@ namespace OrbitalSurvey.Debug
             NotificationUtility.Instance.NotifyExperimentComplete(body, ExperimentLevel.Quarter);
         }
 
-        public void ActivateMission(string missionId = "orbital_survey_01")
+        public async void ActivateMission(string missionId = "orbital_survey_01")
         {
             var activateMissionAction = new ActivateMissionAction();
             activateMissionAction.TargetMissionID = missionId;
             activateMissionAction.Activate();
+
+            var activeMissions = MissionUtility.KSP2ActiveMissions;
+            
+            var missionCreated = false;
+            MissionData newlyActivatedMission = null;
+            while (!missionCreated)
+            {
+                newlyActivatedMission = activeMissions.Find(m => m.ID == missionId);
+                if (newlyActivatedMission == null)
+                {
+                    await Task.Delay(100);
+                }
+                else
+                {
+                    missionCreated = true;
+                }
+            }
+
+            var missionDefinitions = MissionManager.Instance.Missions.Values.SelectMany(list => list).ToList();
+            var mission = missionDefinitions.Find(m => m.Id == missionId);
+            
+            mission.Initialize();
+
+            mission.ActiveMissionData = newlyActivatedMission;
+            
+            MissionManager.Instance.ActiveMissions.Add(mission.Body, mission);
         }
         
         public void CreateMissionGranter()
